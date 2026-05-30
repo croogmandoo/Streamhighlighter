@@ -36,6 +36,7 @@ export const api = {
     user_id: string;
     source: "UPLOAD" | "TWITCH" | "YOUTUBE";
     source_url?: string;
+    storage_key?: string;
     title?: string;
     weights_preset?: string;
   }) => call<JobRef>("POST", "/v1/vods", input),

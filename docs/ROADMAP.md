@@ -12,11 +12,12 @@ shippable v1, and what's stubbed today.
 - [x] Four signal extractors as registered stubs + fusion/selection scaffolding
 - [x] docker-compose for Postgres + Redis + services
 
-## Milestone 1 — Ingest + transcribe (real)
-- [ ] Presigned upload flow end-to-end
-- [ ] `yt-dlp` + Twitch/YouTube VOD pull
-- [ ] Twitch chat replay download
-- [ ] `faster-whisper` transcription with caching
+## Milestone 1 — Ingest + transcribe (real) ✅
+- [x] Presigned upload flow end-to-end (web dropzone → presign → PUT → create)
+- [x] `yt-dlp` + Twitch/YouTube VOD pull (with duration/title metadata)
+- [x] Twitch chat replay download (public GQL, paginated, graceful fallback)
+- [x] ffmpeg audio extraction (16 kHz mono speech + full-rate analysis track)
+- [x] `faster-whisper` / OpenAI transcription with content-hash caching
 
 ## Milestone 2 — Real signals + selection
 - [ ] Implement silence, audio-energy/laughter, chat-velocity, LLM-humor extractors

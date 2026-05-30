@@ -8,6 +8,8 @@
 """
 from __future__ import annotations
 
+import shutil
+import tempfile
 from dataclasses import dataclass, field
 from typing import Callable
 
@@ -22,15 +24,26 @@ from app.pipeline.signals import extract_signals
 
 @dataclass
 class PipelineContext:
-    """Mutable bag carried across stages for one job run."""
+    """Mutable bag carried across stages for one job run.
+
+    Stages run sequentially in a single worker process, so we keep a per-job
+    `workdir` and cache downloaded/derived media locally to avoid re-fetching
+    from object storage between stages. Storage keys are the durable record;
+    local paths are scratch and torn down when the job finishes.
+    """
     job_id: str
     vod_id: str
     user_id: str
     weights_preset: str
-    # Populated as stages run:
-    media_path: str | None = None
-    audio_path: str | None = None
-    chat_path: str | None = None
+    workdir: str = ""
+    # Object-storage keys (durable):
+    media_path: str | None = None        # vod.storage_key
+    audio_path: str | None = None        # speech wav key
+    chat_path: str | None = None         # chat replay key
+    # Local scratch paths (valid only during the run):
+    local_media_path: str | None = None
+    local_speech_wav: str | None = None
+    local_full_wav: str | None = None
     transcript: object | None = None
     signals: dict = field(default_factory=dict)
     highlight_curve: list = field(default_factory=list)
@@ -67,11 +80,13 @@ def run_job(job_id: str) -> str:
         if job is None:
             raise ValueError(f"Job {job_id} not found")
 
+        workdir = tempfile.mkdtemp(prefix=f"job_{job.id}_")
         ctx = PipelineContext(
             job_id=job.id,
             vod_id=job.vod_id,
             user_id=job.user_id,
             weights_preset=job.weights_preset,
+            workdir=workdir,
         )
 
         try:
@@ -96,3 +111,5 @@ def run_job(job_id: str) -> str:
             db.commit()
             emit(db, job_id, Stage.FAILED, job.error, level="error")
             raise
+        finally:
+            shutil.rmtree(workdir, ignore_errors=True)

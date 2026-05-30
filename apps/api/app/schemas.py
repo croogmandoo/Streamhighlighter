@@ -20,6 +20,8 @@ class CreateVodRequest(BaseModel):
     user_id: str
     source: Source
     source_url: str | None = None
+    # For UPLOAD: the storage key the browser PUT to via the presigned URL.
+    storage_key: str | None = None
     title: str | None = None
     weights_preset: str = "balanced"
 

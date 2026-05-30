@@ -27,6 +27,7 @@ def create_vod(payload: CreateVodRequest, db: Session = Depends(get_db)) -> JobR
         user_id=payload.user_id,
         source=payload.source,
         source_url=payload.source_url,
+        storage_key=payload.storage_key,
         title=payload.title,
         status=VodStatus.PENDING,
     )

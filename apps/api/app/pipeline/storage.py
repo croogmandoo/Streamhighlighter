@@ -58,7 +58,29 @@ def download_to(key: str, local_path: str) -> str:
     return local_path
 
 
-def upload_file(local_path: str, key: str) -> str:
+def upload_file(local_path: str, key: str, content_type: str | None = None) -> str:
     s = get_settings()
-    _client().upload_file(local_path, s.storage_bucket, key)
+    extra = {"ContentType": content_type} if content_type else None
+    _client().upload_file(local_path, s.storage_bucket, key, ExtraArgs=extra)
     return key
+
+
+def exists(key: str) -> bool:
+    """True if an object with this key is present (used for transcript caching)."""
+    s = get_settings()
+    try:
+        _client().head_object(Bucket=s.storage_bucket, Key=key)
+        return True
+    except Exception:  # noqa: BLE001 — boto raises ClientError(404) for missing keys
+        return False
+
+
+def put_bytes(key: str, data: bytes, content_type: str = "application/octet-stream") -> str:
+    s = get_settings()
+    _client().put_object(Bucket=s.storage_bucket, Key=key, Body=data, ContentType=content_type)
+    return key
+
+
+def get_bytes(key: str) -> bytes:
+    s = get_settings()
+    return _client().get_object(Bucket=s.storage_bucket, Key=key)["Body"].read()

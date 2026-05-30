@@ -18,11 +18,17 @@ dependencies = [
     "anthropic>=0.40",       # LLM humor scoring
     "yt-dlp>=2024.0",        # Twitch/YouTube VOD retrieval
     "numpy>=1.26",
-    # Heavier optional deps pulled in real milestones:
-    # "faster-whisper", "librosa", "soundfile"
+    # Heavier signal deps pulled in milestone 2:
+    # "librosa", "soundfile"
 ]
 
 [project.optional-dependencies]
+# Transcription backends are optional so CI/test installs stay light. Imported
+# lazily inside app.pipeline.transcribe.
+transcribe = [
+    "faster-whisper>=1.0",
+    "openai>=1.40",
+]
 dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.23",

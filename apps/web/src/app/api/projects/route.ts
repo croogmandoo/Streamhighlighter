@@ -6,12 +6,17 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { quotaFor } from "@/lib/plans";
 
-const Body = z.object({
-  source: z.enum(["UPLOAD", "TWITCH", "YOUTUBE"]),
-  source_url: z.string().url().optional(),
-  title: z.string().optional(),
-  weights_preset: z.string().default("balanced"),
-});
+const Body = z
+  .object({
+    source: z.enum(["UPLOAD", "TWITCH", "YOUTUBE"]),
+    source_url: z.string().url().optional(),
+    storage_key: z.string().optional(),
+    title: z.string().optional(),
+    weights_preset: z.string().default("balanced"),
+  })
+  .refine((b) => (b.source === "UPLOAD" ? !!b.storage_key : !!b.source_url), {
+    message: "UPLOAD requires storage_key; TWITCH/YOUTUBE require source_url",
+  });
 
 // POST /api/projects — verify session + quota, then proxy to the pipeline API.
 export async function POST(req: Request) {

@@ -28,6 +28,14 @@ class Settings(BaseSettings):
     transcribe_backend: str = "local"  # "local" (faster-whisper) | "openai"
     openai_api_key: str | None = None
 
+    # Whisper (faster-whisper) settings for the local backend.
+    whisper_model: str = "base"          # tiny|base|small|medium|large-v3
+    whisper_device: str = "cpu"          # cpu|cuda
+    whisper_compute_type: str = "int8"   # int8 (cpu) | float16 (gpu)
+
+    # Public Twitch web GQL client id, used for unauthenticated chat-replay reads.
+    twitch_gql_client_id: str = "kimne78kx3ncx6brgo4mv6wki5h1ko"
+
     # Source / publish platform credentials
     twitch_api_client_id: str | None = None
     twitch_api_client_secret: str | None = None
