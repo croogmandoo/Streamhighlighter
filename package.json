@@ -1,0 +1,11 @@
+{
+  "name": "streamhighlighter",
+  "private": true,
+  "version": "0.1.0",
+  "description": "AI VOD editing SaaS — Twitch/YouTube VODs into Shorts/Reels/TikTok + a tightened re-cut.",
+  "scripts": {
+    "dev:web": "npm --prefix apps/web run dev",
+    "build:web": "npm --prefix apps/web run build",
+    "typecheck:web": "npm --prefix apps/web run typecheck"
+  }
+}
