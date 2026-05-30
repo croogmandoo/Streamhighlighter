@@ -1,0 +1,44 @@
+# Node
+node_modules/
+.next/
+out/
+dist/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+*.pem
+
+# Media scratch / processing artifacts
+/tmp/
+media/
+*.mp4
+*.mkv
+*.wav
+*.mp3
+!docs/**/*.mp4
+
+# Prisma
+apps/web/prisma/dev.db*
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
